@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/opcionAnyadir"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/opcionAnyadir"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/opcionBorrar"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/opcionBorrar"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/opcionOrdenar"
+        android:icon="@android:drawable/ic_menu_sort_alphabetically"
+        android:title="@string/opcionOrdenar"
+        app:showAsAction="always" >
+        <menu >
+            <item
+                android:id="@+id/opcionOrdenarFecha"
+                android:title="@string/opcionOrdenarFecha" />
+            <item
+                android:id="@+id/opcionOrdenarValoracion"
+                android:title="@string/opcionOrdenarValoracion" />
+            <item
+                android:id="@+id/opcionOrdenarResumen"
+                android:title="@string/opcionOrdenarResumen" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/opcionValorVida"
+        android:title="@string/opcionValorVida" />
+</menu>

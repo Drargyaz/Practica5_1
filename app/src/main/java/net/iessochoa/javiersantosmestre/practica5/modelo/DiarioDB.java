@@ -1,5 +1,7 @@
 package net.iessochoa.javiersantosmestre.practica5.modelo;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -49,23 +51,20 @@ public class DiarioDB {
         dbH = new DBHelper(context);
     }
 
-    /**
-     * Abre la base de datos
-     */
+
+    //Metodo que abre la base de datos
     public void open() throws SQLiteException {
             db = dbH.getWritableDatabase();
     }
 
+    //Metodo que cierra la base de datos si está abierta
     public void close() throws SQLiteException {
         if (db.isOpen()) {
             db.close();
         }
     }
 
-    /**
-     * Con esta clase le diremos a android que cree la base de datos o que
-     * tiene que hacer cuando se modifica la version de la base de datos
-     */
+    //Esta clase le dice a android que cree la base de datos o lo que tiene que hacer cuando se modifica su versión
     private class DBHelper extends SQLiteOpenHelper {
 
 
@@ -75,21 +74,45 @@ public class DiarioDB {
 
 
         @Override
+        //Metodo que nos crea una tabla en la base de datos mediante la secuencia SQL pasada por la constante que tenemos CREATE_TABLE
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             db.execSQL(CREATE_TABLE);
         }
 
         @Override
+        //Metodo que nos actualiza la base de datos borrando la tabla a actualizar y luego volviendola a crear actualizada
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
             db.execSQL(SQL_DELETE_TABLE);
             db.execSQL(CREATE_TABLE);
         }
     }
 
+    //Metodo que borra un dia de la base de datos
     public void borraDia(DiaDiario dia)  throws SQLiteException, SQLiteConstraintException {
         db.delete(DiaDiarioEntries.TABLE_NAME, DiaDiarioEntries.FECHA + "= ?", new String[]{fechaToFechaDB(dia.getFecha())});
     }
 
+    //Metodo que inserta un dia en la base de datos pasado como parametro
+    public void anyadeActualizaDia(DiaDiario dia){
+        //Insertamos cada valor del dia en el ContentValues para asi luego insertar el dia en la tabla o actualizarlo
+        ContentValues valores = new ContentValues();
+        valores.put(DiaDiarioEntries.FECHA, fechaToFechaDB(dia.getFecha()));
+        valores.put(DiaDiarioEntries.VALORACION_DIA, dia.getValoracionDia());
+        valores.put(DiaDiarioEntries.RESUMEN,dia.getResumen());
+        valores.put(DiaDiarioEntries.CONTENIDO,dia.getContenido());
+        if (!dia.getFotoUri().equals("")){
+            valores.put(DiaDiarioEntries.FOTO_URI, dia.getFotoUri());
+        }
+        //Sentencia where que comprueba si el dia existe, si existe, lo actualiza.
+        String where = DiaDiarioEntries.FECHA + "=?";
+        String[] arg = new String[]{fechaToFechaDB(dia.getFecha())};
+        //actualizamos si el dia existe en el caso de que no, lo insertamos.
+        db.update(DiaDiarioEntries.TABLE_NAME, valores, where, arg);
+        //Usamos el insertOrThrow para en caso de tener problemas salte la excepcion correspondiente
+        db.insertOrThrow(DiaDiarioEntries.TABLE_NAME, null, valores);
+    }
+
+    //Metodo para pasar un string a un formato fecha
     public static Date fechaBDtoFecha(String f){
         SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha=null;
@@ -101,8 +124,27 @@ public class DiarioDB {
         return fecha;
     }
 
+    //Metodo para pasar una fecha a un formato String
     public static String fechaToFechaDB(Date fecha){
         DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         return f.format(fecha);
+    }
+
+    public static DiaDiario cursorADiaDiario(Cursor c){
+        //obtenemos la posicion de la columna id
+        int indiceColumna = c.getColumnIndex(DiaDiarioEntries.ID);
+        //obtenemos los valores de cada dato en el cursor en función de su indice: fecha,valoracionDia,resumen,foto
+        indiceColumna = c.getColumnIndex(DiaDiarioEntries.FECHA);
+        String fecha = c.getString(indiceColumna);
+        Date fechaPasada= fechaBDtoFecha(fecha);
+        indiceColumna = c.getColumnIndex(DiaDiarioEntries.VALORACION_DIA);
+        int valoracionDia = c.getInt(indiceColumna);
+        indiceColumna = c.getColumnIndex(DiaDiarioEntries.RESUMEN);
+        String resumen = c.getString(indiceColumna);
+        indiceColumna = c.getColumnIndex(DiaDiarioEntries.FOTO_URI);
+        String foto=c.getString(indiceColumna);
+
+        //Devolvemos un diaDiario que tiene los datos que hay en el cursor.
+        return new DiaDiario(fechaPasada,valoracionDia,resumen,foto);
     }
 }

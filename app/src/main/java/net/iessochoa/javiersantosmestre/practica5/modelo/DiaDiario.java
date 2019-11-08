@@ -120,6 +120,14 @@ public class DiaDiario implements Parcelable {
     }
 
 
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
     //Metodo para mostrar el icono en función de la valoración del dia
     public int getValoracionResumida(){
         if(this.getValoracionDia() < 5){
