@@ -100,7 +100,7 @@ public class DiarioDB {
         valores.put(DiaDiarioEntries.VALORACION_DIA, dia.getValoracionDia());
         valores.put(DiaDiarioEntries.RESUMEN,dia.getResumen());
         valores.put(DiaDiarioEntries.CONTENIDO,dia.getContenido());
-        if (!dia.getFotoUri().equals("")){
+        if (!dia.getFotoUri().isEmpty()){
             valores.put(DiaDiarioEntries.FOTO_URI, dia.getFotoUri());
         }
         //Sentencia where que comprueba si el dia existe, si existe, lo actualiza.
@@ -112,9 +112,38 @@ public class DiarioDB {
         db.insertOrThrow(DiaDiarioEntries.TABLE_NAME, null, valores);
     }
 
+    public Cursor obtenDiario(String ordenadoPor){
+        String where=null;
+        String[] argWhere=null;
+        if(ordenadoPor!=null){
+            if(ordenadoPor.equals("fecha")){
+                return db.query(DiaDiarioEntries.TABLE_NAME, null, null, null, null, null, DiaDiarioEntries.FECHA);
+            }else if(ordenadoPor.equals("valoracion")){
+                return db.query(DiaDiarioEntries.TABLE_NAME, null, null, null, null, null, DiaDiarioEntries.VALORACION_DIA);
+            }else{
+                return db.query(DiaDiarioEntries.TABLE_NAME, null, null, null, null, null, DiaDiarioEntries.RESUMEN);
+            }
+        }
+        return null;
+    }
+
+    //Metodo que nos devuelve la valoración media de la vida
+    public int valoraVida(){
+        Cursor c = db.rawQuery("SELECT AVG("+DiaDiarioEntries.VALORACION_DIA+") FROM "+DiaDiarioEntries.TABLE_NAME,null);
+        int media=0;
+        if(c!=null){
+            c.moveToFirst();
+            do{
+                media=c.getInt(c.getColumnIndex(DiaDiarioEntries.VALORACION_DIA));
+            }while(c.moveToNext());
+        }
+        c.close();
+        return media;
+    }
+
     //Metodo para pasar un string a un formato fecha
     public static Date fechaBDtoFecha(String f){
-        SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd/MM/yyyy");
         Date fecha=null;
         try {
             fecha= formatoDelTexto.parse(f);
@@ -126,15 +155,14 @@ public class DiarioDB {
 
     //Metodo para pasar una fecha a un formato String
     public static String fechaToFechaDB(Date fecha){
-        DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
         return f.format(fecha);
     }
 
+    //Metodo que devuelve un DiaDiario de la posición del cursor actual.
     public static DiaDiario cursorADiaDiario(Cursor c){
-        //obtenemos la posicion de la columna id
-        int indiceColumna = c.getColumnIndex(DiaDiarioEntries.ID);
         //obtenemos los valores de cada dato en el cursor en función de su indice: fecha,valoracionDia,resumen,foto
-        indiceColumna = c.getColumnIndex(DiaDiarioEntries.FECHA);
+        int indiceColumna = c.getColumnIndex(DiaDiarioEntries.FECHA);
         String fecha = c.getString(indiceColumna);
         Date fechaPasada= fechaBDtoFecha(fecha);
         indiceColumna = c.getColumnIndex(DiaDiarioEntries.VALORACION_DIA);
@@ -146,5 +174,13 @@ public class DiarioDB {
 
         //Devolvemos un diaDiario que tiene los datos que hay en el cursor.
         return new DiaDiario(fechaPasada,valoracionDia,resumen,foto);
+    }
+
+    public void cargarDatos(){
+        DiaDiario[] diasPorDefecto={new DiaDiario(fechaBDtoFecha("10/06/2010"),5,"Selectividad","asdjakdaldsa sadsad sadsadsad asdsadasda"),
+                new DiaDiario(fechaBDtoFecha("10/12/2015"),8,"Examen ADA","asdjakasdsaldjas kdsajd ksajdka sdsadaldsa sadsad sadsadsad asdsadasda")};
+        for (DiaDiario d:diasPorDefecto) {
+            this.anyadeActualizaDia(d);
+        }
     }
 }
