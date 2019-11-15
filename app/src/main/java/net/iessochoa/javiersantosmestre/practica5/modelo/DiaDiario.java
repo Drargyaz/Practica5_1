@@ -34,6 +34,10 @@ public class DiaDiario implements Parcelable {
         this.longitud = "";
     }
 
+    public DiaDiario() {
+
+    }
+
     protected DiaDiario(Parcel in) {
         valoracionDia = in.readInt();
         resumen = in.readString();

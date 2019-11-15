@@ -151,33 +151,28 @@ public class DiarioDB {
 
     //Metodo para pasar una fecha a un formato String
     public static String fechaToFechaDB(Date fecha) {
-        DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-        return f.format(fecha);
+        return new SimpleDateFormat("dd/MM/yyyy").format(fecha);
     }
 
     //Metodo que devuelve un DiaDiario de la posición del cursor actual.
     public static DiaDiario cursorADiaDiario(Cursor c) {
         //obtenemos los valores de cada dato en el cursor en función de su indice: fecha,valoracionDia,resumen,foto
-        int indiceColumna = c.getColumnIndex(DiaDiarioEntries.FECHA);
-        String fecha = c.getString(indiceColumna);
+        String fecha = c.getString(c.getColumnIndex(DiaDiarioEntries.FECHA));
         Date fechaPasada = fechaBDtoFecha(fecha);
-        indiceColumna = c.getColumnIndex(DiaDiarioEntries.VALORACION_DIA);
-        int valoracionDia = c.getInt(indiceColumna);
-        indiceColumna = c.getColumnIndex(DiaDiarioEntries.RESUMEN);
-        String resumen = c.getString(indiceColumna);
-        indiceColumna = c.getColumnIndex(DiaDiarioEntries.FOTO_URI);
-        String foto = c.getString(indiceColumna);
+        int valoracionDia = c.getInt(c.getColumnIndex(DiaDiarioEntries.VALORACION_DIA));
+        String resumen = c.getString(c.getColumnIndex(DiaDiarioEntries.RESUMEN));
+        String contenido = c.getString(c.getColumnIndex(DiaDiarioEntries.CONTENIDO));
+        String foto = c.getString(c.getColumnIndex(DiaDiarioEntries.FOTO_URI));
 
         //Devolvemos un diaDiario que tiene los datos que hay en el cursor.
-        return new DiaDiario(fechaPasada, valoracionDia, resumen, foto);
+        return new DiaDiario(fechaPasada, valoracionDia, resumen, contenido, foto);
     }
 
     public void cargarDatos() {
         DiaDiario[] diasPorDefecto = {new DiaDiario(fechaBDtoFecha("10/06/2010"), 5, "Selectividad", "asdjakdaldsa sadsad sadsadsad asdsadasda",""),
-                new DiaDiario(fechaBDtoFecha("10/12/2015"), 8, "Examen ADA", "asdjakasdsaldjas kdsajd ksajdka sdsadaldsa sadsad sadsadsad asdsadasda","")};
+                new DiaDiario(fechaBDtoFecha("10/12/2015"), 3, "Examen ADA", "asdjakasdsaldjas kdsajd ksajdka sdsadaldsa sadsad sadsadsad asdsadasda","")};
         for (DiaDiario d : diasPorDefecto) {
             this.anyadeActualizaDia(d);
         }
-        //db.execSQL("INSERT INTO "+DiaDiarioEntries.TABLE_NAME+" VALUES (\"10/06/2010\",5,\"Examen ADA\",\"lsakdjsalkdjas\",\"\")");
     }
 }

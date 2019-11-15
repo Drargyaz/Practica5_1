@@ -16,19 +16,7 @@
         android:id="@+id/opcionOrdenar"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
         android:title="@string/opcionOrdenar"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/opcionOrdenarFecha"
-                android:title="@string/opcionOrdenarFecha" />
-            <item
-                android:id="@+id/opcionOrdenarValoracion"
-                android:title="@string/opcionOrdenarValoracion" />
-            <item
-                android:id="@+id/opcionOrdenarResumen"
-                android:title="@string/opcionOrdenarResumen" />
-        </menu>
-    </item>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/opcionValorVida"
         android:title="@string/opcionValorVida" />

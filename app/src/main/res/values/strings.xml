@@ -3,12 +3,32 @@
     <string name="opcionAnyadir">Añadir</string>
     <string name="opcionBorrar">Borrar</string>
     <string name="opcionOrdenar">Ordenar por</string>
-    <string name="opcionOrdenarResumen">Resumen</string>
-    <string name="opcionOrdenarValoracion">Valoracion</string>
-    <string name="opcionOrdenarFecha">Fecha</string>
+    <string name="opcionOrdenarResumen">resumen</string>
+    <string name="opcionOrdenarValoracion">valoracion</string>
+    <string name="opcionOrdenarFecha">fecha</string>
     <string name="opcionValorVida">Valor vida</string>
     <string name="error_abrirbd">Problema al abrir la base de datos</string>
     <string name="error_leerBD">Problema al leer en la base de datos</string>
     <string name="tvResumen">Resumen</string>
     <string name="tvFecha">Fecha</string>
+    <string name="etResumen">Resumen breve del día</string>
+    <string name="tvValoracion">Valorar día:</string>
+    <string name="etContenido">Contenido del dia</string>
+    <string name="tituloDialogoCamposVacios">Aviso</string>
+    <string name="mensajeDialogoCamposVacios">Es necesario rellenar todos los campos</string>
+    <string name="tvMostrar">Mostrar</string>
+    <string name="tituloDialogoOrdenar">Ordenar por:</string>
+    <string-array name="valoraciones">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
 </resources>
