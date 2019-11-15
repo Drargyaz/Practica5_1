@@ -139,6 +139,19 @@ public class DiaDiario implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "DiaDiario{" +
+                "fecha=" + fecha +
+                ", valoracionDia=" + valoracionDia +
+                ", resumen='" + resumen + '\'' +
+                ", contenido='" + contenido + '\'' +
+                ", fotoUri='" + fotoUri + '\'' +
+                ", latitud='" + latitud + '\'' +
+                ", longitud='" + longitud + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

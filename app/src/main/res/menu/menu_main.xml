@@ -11,13 +11,13 @@
         android:id="@+id/opcionBorrar"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/opcionBorrar"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/opcionOrdenar"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
         android:title="@string/opcionOrdenar"
-        app:showAsAction="always" >
-        <menu >
+        app:showAsAction="ifRoom">
+        <menu>
             <item
                 android:id="@+id/opcionOrdenarFecha"
                 android:title="@string/opcionOrdenarFecha" />
