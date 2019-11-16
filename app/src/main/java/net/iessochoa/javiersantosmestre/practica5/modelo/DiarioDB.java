@@ -123,14 +123,14 @@ public class DiarioDB {
 
     //Metodo que nos devuelve la valoración media de la vida
     public int valoraVida() {
-        Cursor c = db.rawQuery("SELECT AVG(" + DiaDiarioEntries.VALORACION_DIA + ") FROM " + DiaDiarioEntries.TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT AVG(" + DiaDiarioEntries.VALORACION_DIA + ") AS media FROM " + DiaDiarioEntries.TABLE_NAME, null);
         int media = 0;
         if (c != null) {
             //Empieza el cursor por el primer valor
             c.moveToFirst();
             //Mientras que el cursor tenga valores
             do {
-                media = c.getInt(c.getColumnIndex(DiaDiarioEntries.VALORACION_DIA));
+                media = c.getInt(c.getColumnIndex("media"));
             } while (c.moveToNext());
         }
         c.close();

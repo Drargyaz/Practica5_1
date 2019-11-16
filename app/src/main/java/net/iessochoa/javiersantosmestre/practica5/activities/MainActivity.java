@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private DiarioDB diarioDB;
     //private ListView lvLista;
     private TextView tvMostrar;
+    private String ordenActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +35,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvMostrar = findViewById(R.id.tvMostrar);
         try {
+            //Creamos la base de datos y la abrimos
             diarioDB = new DiarioDB(this);
             diarioDB.open();
         } catch (android.database.sqlite.SQLiteException e) {
             mostrarMensajeError(e);
         }
+        //Cargamos los datos por defecto en la base de datos
         diarioDB.cargarDatos();
-        this.mostrarDatos(DiarioContract.DiaDiarioEntries.FECHA);
+        ordenActual=DiarioContract.DiaDiarioEntries.FECHA;
+        //Mostramos los datos que tiene la base de datos en el TextView
+        this.mostrarDatos(ordenActual);
 
     }
 
@@ -67,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, OPTION_REQUEST_CREAR_DIA);
                 return true;
             case R.id.opcionBorrar:
-                //TODO implement
+                diaABorrar();
+                mostrarDatos(ordenActual);
                 return true;
             case R.id.opcionOrdenar:
                 dialogoOrdenar();
                 return true;
             case R.id.opcionValorVida:
-                //TODO implement
+                dialogoValorVida();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -85,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, getString(R.string.error_leerBD) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    //Método para mostrar los datos ordenados por el parametro que se pase en el String
     private void mostrarDatos(String ordenarPor) {
         Cursor c = diarioDB.obtenDiario(ordenarPor);
         DiaDiario dia;
@@ -95,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
             do {
                 dia=DiarioDB.cursorADiaDiario(c);
                 //podéis sobrecargar toString en DiaDiario para mostrar los datos
-                tvMostrar.append(dia.toString()+"\n");
+                tvMostrar.append(dia.muestraDia()+"\n"+
+                        "-----------------------------------------------\n");
             } while(c.moveToNext());
         }
     }
@@ -105,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Comprobamos si el resultado de la segunda actividad no es "RESULT_CANCELED" (pulsado el botón de Cancelar).
-        if (resultCode == RESULT_OK && requestCode == OPTION_REQUEST_CREAR_DIA) {
+        if (resultCode != RESULT_CANCELED) {
             // Si no lo es, almacenamos el resultado de EdicionDiaActivity, que es el dia creado.
             DiaDiario dia = data.getParcelableExtra(EdicionDiaActivity.EXTRA_DIA);
             // Añadimos el dia a la base de datos y lo mostramos en el TextView
@@ -114,18 +122,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Dialogo que muestra una lista y en función del item elegido ordena de una forma o de otra.
+    //Dialogo que muestra una lista y en función del item elegido ordena de una forma o de otra el contenido de la base de datos.
     public void dialogoOrdenar() {
         final CharSequence[] items = { getResources().getString(R.string.opcionOrdenarFecha), getResources().getString(R.string.opcionOrdenarValoracion), getResources().getString(R.string.opcionOrdenarResumen)};
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(getResources().getString(R.string.tituloDialogoOrdenar));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                mostrarDatos(items[item].toString());
+                ordenActual=items[item].toString();
+                mostrarDatos(ordenActual);
             }
         }).show();
     }
 
+    //Metodo que nos muestra un AlertDialog (dialogo) mostrando la media de valoraciones
+    private void dialogoValorVida() {
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        //Titulo del dialogo
+        dialogo.setTitle(getResources().getString(R.string.tituloMedia));
+        //Mensaje que aparece en el dialogo
+        dialogo.setMessage(getResources().getString(R.string.mensajeValorVida)+diarioDB.valoraVida());
+        // Creación boton ok y lo que ocurriria al ser clickado
+        dialogo.setPositiveButton(android.R.string.yes
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    //Metodo que al clickar en el botón de ok, cancela el dialogo y lo cierra.
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        //Muestra el dialogo
+        dialogo.show();
+    }
+
+    //Metodo que nos borra el primer dia mostrado en el TextView (varia en función de la forma que esté ordenada)
+    private void diaABorrar(){
+        Cursor c = diarioDB.obtenDiario(ordenActual);
+        DiaDiario dia;
+        if (c.moveToFirst()) {
+            //Almacenamos el primer dato y lo devolvemos
+            diarioDB.borraDia(DiarioDB.cursorADiaDiario(c));
+        }
+    }
 
     @Override
     //Al destruir la actividad, cierra la base de datos

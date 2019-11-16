@@ -3,6 +3,7 @@ package net.iessochoa.javiersantosmestre.practica5.modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DiaDiario implements Parcelable {
@@ -140,6 +141,11 @@ public class DiaDiario implements Parcelable {
             return 2;
         }
         return 3;
+    }
+
+    public String muestraDia(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(this.fecha) +" - " + this.getResumen()+ "\n Valoración: "+this.valoracionDia;
     }
 
     @Override

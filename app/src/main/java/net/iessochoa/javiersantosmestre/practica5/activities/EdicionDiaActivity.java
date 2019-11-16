@@ -29,7 +29,7 @@ import java.util.Date;
 
 public class EdicionDiaActivity extends AppCompatActivity {
     //Constante que nos permitirá pasar el día con sus respectivos datos desde la actividad EdicionDiaActivity para insetarlo en la base de datos
-    public static final String EXTRA_DIA = "net.iessochoa.javiersantosmestre.practica5.dia" ;
+    public static String EXTRA_DIA = "net.iessochoa.javiersantosmestre.practica5.dia" ;
 
     //Declaracion de las variables que vamos a usar y modificar, en este caso un Spinner para la valoracion,
     // un editText multilinea para el contenido del dia, otro editText para el resumen del dia, un objeto DiaDiario para pasarlo
@@ -75,16 +75,17 @@ public class EdicionDiaActivity extends AppCompatActivity {
                 if (etResumen.getText().toString().isEmpty() || etContenido.getText().toString().isEmpty()){
                     dialogoHayCamposVacios();
                 }else{
+                    //Si están todos los campos con valores, creamos el dia con sus respectivos datos
                     Date fecha = textoAFecha(tvFecha.getText().toString());
                     int valoracion = Integer.parseInt(spValoracion.getItemAtPosition(spValoracion.getSelectedItemPosition()).toString());
                     String resumen = etResumen.getText().toString();
                     String contenido = etContenido.getText().toString();
                     dia = new DiaDiario(fecha,valoracion,resumen,contenido);
                     //Almacenamos el resultado en el Intent que llamó la actividad
-                    Intent i = getIntent();
-                    i.putExtra(EXTRA_DIA, dia);
+                    Intent intent = getIntent();
+                    intent.putExtra(EXTRA_DIA, dia);
                     //Indicamos que se ha pulsado aceptar y enviamos el Intent
-                    setResult(RESULT_OK,i);
+                    setResult(RESULT_OK,intent);
                     finish();
                 }
             }
