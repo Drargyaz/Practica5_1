@@ -117,8 +117,9 @@ public class MainActivity extends AppCompatActivity {
             // Si no lo es, almacenamos el resultado de EdicionDiaActivity, que es el dia creado.
             DiaDiario dia = data.getParcelableExtra(EdicionDiaActivity.EXTRA_DIA);
             // Añadimos el dia a la base de datos y lo mostramos en el TextView
-            Toast.makeText(this,data.getParcelableExtra(EdicionDiaActivity.EXTRA_DIA)+"",Toast.LENGTH_SHORT).show();
-            //diarioDB.anyadeActualizaDia(dia);
+            //Toast.makeText(this,data.getParcelableExtra(EdicionDiaActivity.EXTRA_DIA)+"",Toast.LENGTH_SHORT).show();
+            diarioDB.anyadeActualizaDia(dia);
+            mostrarDatos(ordenActual);
         }
     }
 

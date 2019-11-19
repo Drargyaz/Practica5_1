@@ -95,7 +95,7 @@ public class DiarioDB {
         valores.put(DiaDiarioEntries.VALORACION_DIA, dia.getValoracionDia());
         valores.put(DiaDiarioEntries.RESUMEN, dia.getResumen());
         valores.put(DiaDiarioEntries.CONTENIDO, dia.getContenido());
-        if (!dia.getFotoUri().isEmpty()) {
+        if (dia.getFotoUri()!=null && !dia.getFotoUri().isEmpty())  {
             valores.put(DiaDiarioEntries.FOTO_URI, dia.getFotoUri());
         }
         //Sentencia where que comprueba si el dia existe, si existe, lo actualiza.

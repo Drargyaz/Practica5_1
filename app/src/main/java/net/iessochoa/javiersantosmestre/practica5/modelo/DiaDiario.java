@@ -40,6 +40,8 @@ public class DiaDiario implements Parcelable {
     }
 
     protected DiaDiario(Parcel in) {
+        long tmpFecha = in.readLong();
+        this.fecha = tmpFecha == -1 ? null : new Date(tmpFecha);
         valoracionDia = in.readInt();
         resumen = in.readString();
         contenido = in.readString();
@@ -67,6 +69,7 @@ public class DiaDiario implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(this.fecha != null ? this.fecha.getTime() : -1);
         parcel.writeInt(valoracionDia);
         parcel.writeString(resumen);
         parcel.writeString(contenido);
