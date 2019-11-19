@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Dialogo que muestra una lista y en función del item elegido ordena de una forma o de otra el contenido de la base de datos.
     public void dialogoOrdenar() {
-        final CharSequence[] items = { getResources().getString(R.string.opcionOrdenarFecha), getResources().getString(R.string.opcionOrdenarValoracion), getResources().getString(R.string.opcionOrdenarResumen)};
+        final CharSequence[] items = {DiarioContract.DiaDiarioEntries.FECHA, DiarioContract.DiaDiarioEntries.VALORACION_DIA, DiarioContract.DiaDiarioEntries.RESUMEN};
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(getResources().getString(R.string.tituloDialogoOrdenar));
         builder.setItems(items, new DialogInterface.OnClickListener() {

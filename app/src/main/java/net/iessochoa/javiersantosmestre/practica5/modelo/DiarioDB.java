@@ -110,9 +110,9 @@ public class DiarioDB {
 
     public Cursor obtenDiario(String ordenadoPor) {
         if (ordenadoPor != null) {
-            if (ordenadoPor.equals("fecha")) {
+            if (ordenadoPor.equals(DiaDiarioEntries.FECHA)) {
                 return db.query(DiaDiarioEntries.TABLE_NAME, null, null, null, null, null, DiaDiarioEntries.FECHA);
-            } else if (ordenadoPor.equals("valoracion")) {
+            } else if (ordenadoPor.equals(DiaDiarioEntries.VALORACION_DIA)) {
                 return db.query(DiaDiarioEntries.TABLE_NAME, null, null, null, null, null, DiaDiarioEntries.VALORACION_DIA);
             } else {
                 return db.query(DiaDiarioEntries.TABLE_NAME, null, null, null, null, null, DiaDiarioEntries.RESUMEN);
